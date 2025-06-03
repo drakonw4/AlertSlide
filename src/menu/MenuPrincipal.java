@@ -2,6 +2,7 @@ package menu;
 
 import services.*;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MenuPrincipal {
@@ -15,37 +16,27 @@ public class MenuPrincipal {
     private final AlertService alertService = new AlertService();
     private final EvacuationService evacuationService = new EvacuationService();
 
-
-    private void limparTela() {
-        try {
-            String os = System.getProperty("os.name").toLowerCase();
-            if (os.contains("windows")) {
-                // Executa comando cls no Windows via cmd.exe
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } else {
-                // Para Linux/macOS
-                new ProcessBuilder("clear").inheritIO().start().waitFor();
-            }
-        } catch (Exception e) {
-            System.out.println("Não foi possível limpar a tela.");
-        }
-    }
-
     public void exibirMenu() {
         int opcao;
         do {
-            limparTela(); // limpa a tela toda vez que o menu for exibido
-
+            limparConsole();
             System.out.println("\n===== ALERTSLIDE - MENU PRINCIPAL =====");
-            System.out.println("1. Gerenciar Usuários");
+            System.out.println("1. Gerenciar Usuarios");
             System.out.println("2. Gerenciar Sensores");
             System.out.println("3. Gerenciar Abrigos");
-            System.out.println("4. Gerenciar Equipes de Emergência");
-            System.out.println("5. Iniciar Simulação de Risco");
+            System.out.println("4. Gerenciar Equipes de Emergencia");
+            System.out.println("5. Iniciar Simulacao de Risco");
             System.out.println("0. Sair");
-            System.out.print("Escolha uma opção: ");
-            opcao = scanner.nextInt();
-            scanner.nextLine(); // Consumir a quebra de linha
+            System.out.print("Escolha uma opcao: ");
+
+            try {
+                opcao = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada invalida. Digite apenas numeros.");
+                scanner.nextLine();
+                opcao = -1;
+            }
 
             switch (opcao) {
                 case 1 -> menuUsuarios();
@@ -54,25 +45,19 @@ public class MenuPrincipal {
                 case 4 -> menuEquipes();
                 case 5 -> iniciarSimulacao();
                 case 0 -> System.out.println("Encerrando o sistema...");
-                default -> System.out.println("Opção inválida!");
-            }
-
-            if (opcao != 0) {
-                // Pausa de 2 segundos antes de mostrar o menu de novo
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
+                default -> {
+                    System.out.println("Opcao invalida.");
+                    aguardarEnter();
                 }
             }
-
         } while (opcao != 0);
     }
 
     private void iniciarSimulacao() {
-        System.out.println("\n>>> Iniciando simulação de risco...");
+        limparConsole();
+        System.out.println("\n>>> Iniciando simulacao de risco...");
 
-        int ciclos = 5; // Número de ciclos simulados
+        int ciclos = 5;
         for (int i = 1; i <= ciclos; i++) {
             System.out.println("\n--- CICLO " + i + " ---");
 
@@ -81,20 +66,21 @@ public class MenuPrincipal {
             evacuationService.evacuacaoEmergencial();
 
             try {
-                Thread.sleep(2000); // Pausa de 2 segundos entre ciclos
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
-                System.out.println("Simulação interrompida.");
-                Thread.currentThread().interrupt();
+                System.out.println("Simulacao interrompida.");
             }
         }
 
-        System.out.println("\n>>> Simulação finalizada.\n");
+        System.out.println("\n>>> Simulacao finalizada.");
+        aguardarEnter();
     }
 
     private void menuUsuarios() {
         int opcao;
         do {
-            System.out.println("\n--- Gerenciar Usuários ---");
+            limparConsole();
+            System.out.println("\n--- Gerenciar Usuarios ---");
             System.out.println("1. Cadastrar");
             System.out.println("2. Listar");
             System.out.println("3. Buscar por ID");
@@ -102,16 +88,42 @@ public class MenuPrincipal {
             System.out.println("5. Excluir");
             System.out.println("0. Voltar");
             System.out.print("Escolha: ");
-            opcao = scanner.nextInt();
+
+            try {
+                opcao = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada invalida.");
+                scanner.nextLine();
+                opcao = -1;
+            }
 
             switch (opcao) {
-                case 1 -> userService.cadastrar(scanner);
-                case 2 -> userService.listar();
-                case 3 -> userService.buscar(scanner);
-                case 4 -> userService.atualizar(scanner);
-                case 5 -> userService.excluir(scanner);
+                case 1 -> {
+                    userService.cadastrar(scanner);
+                    aguardarEnter();
+                }
+                case 2 -> {
+                    userService.listar();
+                    aguardarEnter();
+                }
+                case 3 -> {
+                    userService.buscar(scanner);
+                    aguardarEnter();
+                }
+                case 4 -> {
+                    userService.atualizar(scanner);
+                    aguardarEnter();
+                }
+                case 5 -> {
+                    userService.excluir(scanner);
+                    aguardarEnter();
+                }
                 case 0 -> {}
-                default -> System.out.println("Opção inválida.");
+                default -> {
+                    System.out.println("Opcao invalida.");
+                    aguardarEnter();
+                }
             }
         } while (opcao != 0);
     }
@@ -119,6 +131,7 @@ public class MenuPrincipal {
     private void menuSensores() {
         int opcao;
         do {
+            limparConsole();
             System.out.println("\n--- Gerenciar Sensores ---");
             System.out.println("1. Cadastrar");
             System.out.println("2. Listar");
@@ -127,16 +140,42 @@ public class MenuPrincipal {
             System.out.println("5. Excluir");
             System.out.println("0. Voltar");
             System.out.print("Escolha: ");
-            opcao = scanner.nextInt();
+
+            try {
+                opcao = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada invalida.");
+                scanner.nextLine();
+                opcao = -1;
+            }
 
             switch (opcao) {
-                case 1 -> sensorService.cadastrar(scanner);
-                case 2 -> sensorService.listar();
-                case 3 -> sensorService.buscar(scanner);
-                case 4 -> sensorService.atualizar(scanner);
-                case 5 -> sensorService.excluir(scanner);
+                case 1 -> {
+                    sensorService.cadastrar(scanner);
+                    aguardarEnter();
+                }
+                case 2 -> {
+                    sensorService.listar();
+                    aguardarEnter();
+                }
+                case 3 -> {
+                    sensorService.buscar(scanner);
+                    aguardarEnter();
+                }
+                case 4 -> {
+                    sensorService.atualizar(scanner);
+                    aguardarEnter();
+                }
+                case 5 -> {
+                    sensorService.excluir(scanner);
+                    aguardarEnter();
+                }
                 case 0 -> {}
-                default -> System.out.println("Opção inválida.");
+                default -> {
+                    System.out.println("Opcao invalida.");
+                    aguardarEnter();
+                }
             }
         } while (opcao != 0);
     }
@@ -144,6 +183,7 @@ public class MenuPrincipal {
     private void menuAbrigos() {
         int opcao;
         do {
+            limparConsole();
             System.out.println("\n--- Gerenciar Abrigos ---");
             System.out.println("1. Cadastrar");
             System.out.println("2. Listar");
@@ -152,16 +192,42 @@ public class MenuPrincipal {
             System.out.println("5. Excluir");
             System.out.println("0. Voltar");
             System.out.print("Escolha: ");
-            opcao = scanner.nextInt();
+
+            try {
+                opcao = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada invalida.");
+                scanner.nextLine();
+                opcao = -1;
+            }
 
             switch (opcao) {
-                case 1 -> shelterService.cadastrar(scanner);
-                case 2 -> shelterService.listar();
-                case 3 -> shelterService.buscar(scanner);
-                case 4 -> shelterService.atualizar(scanner);
-                case 5 -> shelterService.excluir(scanner);
+                case 1 -> {
+                    shelterService.cadastrar(scanner);
+                    aguardarEnter();
+                }
+                case 2 -> {
+                    shelterService.listar();
+                    aguardarEnter();
+                }
+                case 3 -> {
+                    shelterService.buscar(scanner);
+                    aguardarEnter();
+                }
+                case 4 -> {
+                    shelterService.atualizar(scanner);
+                    aguardarEnter();
+                }
+                case 5 -> {
+                    shelterService.excluir(scanner);
+                    aguardarEnter();
+                }
                 case 0 -> {}
-                default -> System.out.println("Opção inválida.");
+                default -> {
+                    System.out.println("Opcao invalida.");
+                    aguardarEnter();
+                }
             }
         } while (opcao != 0);
     }
@@ -169,7 +235,8 @@ public class MenuPrincipal {
     private void menuEquipes() {
         int opcao;
         do {
-            System.out.println("\n--- Gerenciar Equipes de Emergência ---");
+            limparConsole();
+            System.out.println("\n--- Gerenciar Equipes de Emergencia ---");
             System.out.println("1. Cadastrar");
             System.out.println("2. Listar");
             System.out.println("3. Buscar por ID");
@@ -177,17 +244,61 @@ public class MenuPrincipal {
             System.out.println("5. Excluir");
             System.out.println("0. Voltar");
             System.out.print("Escolha: ");
-            opcao = scanner.nextInt();
+
+            try {
+                opcao = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada invalida.");
+                scanner.nextLine();
+                opcao = -1;
+            }
 
             switch (opcao) {
-                case 1 -> emergencyTeamService.cadastrar(scanner);
-                case 2 -> emergencyTeamService.listar();
-                case 3 -> emergencyTeamService.buscar(scanner);
-                case 4 -> emergencyTeamService.atualizar(scanner);
-                case 5 -> emergencyTeamService.excluir(scanner);
+                case 1 -> {
+                    emergencyTeamService.cadastrar(scanner);
+                    aguardarEnter();
+                }
+                case 2 -> {
+                    emergencyTeamService.listar();
+                    aguardarEnter();
+                }
+                case 3 -> {
+                    emergencyTeamService.buscar(scanner);
+                    aguardarEnter();
+                }
+                case 4 -> {
+                    emergencyTeamService.atualizar(scanner);
+                    aguardarEnter();
+                }
+                case 5 -> {
+                    emergencyTeamService.excluir(scanner);
+                    aguardarEnter();
+                }
                 case 0 -> {}
-                default -> System.out.println("Opção inválida.");
+                default -> {
+                    System.out.println("Opcao invalida.");
+                    aguardarEnter();
+                }
             }
         } while (opcao != 0);
+    }
+
+    private void limparConsole() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (Exception e) {
+            System.out.println("Nao foi possivel limpar o console.");
+        }
+    }
+
+    private void aguardarEnter() {
+        System.out.println("\nPressione ENTER para continuar...");
+        scanner.nextLine();
     }
 }
