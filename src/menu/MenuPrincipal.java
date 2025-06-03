@@ -18,7 +18,9 @@ public class MenuPrincipal {
 
     private void limparTela() {
         try {
-            if (System.getProperty("os.name").contains("Windows")) {
+            String os = System.getProperty("os.name").toLowerCase();
+            if (os.contains("windows")) {
+                // Executa comando cls no Windows via cmd.exe
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
             } else {
                 // Para Linux/macOS
