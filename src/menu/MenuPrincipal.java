@@ -15,9 +15,25 @@ public class MenuPrincipal {
     private final AlertService alertService = new AlertService();
     private final EvacuationService evacuationService = new EvacuationService();
 
+
+    private void limparTela() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                // Para Linux/macOS
+                new ProcessBuilder("clear").inheritIO().start().waitFor();
+            }
+        } catch (Exception e) {
+            System.out.println("Não foi possível limpar a tela.");
+        }
+    }
+
     public void exibirMenu() {
         int opcao;
         do {
+            limparTela(); // limpa a tela toda vez que o menu for exibido
+
             System.out.println("\n===== ALERTSLIDE - MENU PRINCIPAL =====");
             System.out.println("1. Gerenciar Usuários");
             System.out.println("2. Gerenciar Sensores");
@@ -38,6 +54,16 @@ public class MenuPrincipal {
                 case 0 -> System.out.println("Encerrando o sistema...");
                 default -> System.out.println("Opção inválida!");
             }
+
+            if (opcao != 0) {
+                // Pausa de 2 segundos antes de mostrar o menu de novo
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+
         } while (opcao != 0);
     }
 
@@ -53,9 +79,10 @@ public class MenuPrincipal {
             evacuationService.evacuacaoEmergencial();
 
             try {
-                Thread.sleep(2000); // Pausa de 2 segundos
+                Thread.sleep(2000); // Pausa de 2 segundos entre ciclos
             } catch (InterruptedException e) {
                 System.out.println("Simulação interrompida.");
+                Thread.currentThread().interrupt();
             }
         }
 
