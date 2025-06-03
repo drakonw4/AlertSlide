@@ -7,37 +7,8 @@ import java.util.Scanner;
 public class UserService {
     private ArrayList<User> usuarios = new ArrayList<>();
     private int proximoId = 1;
-    private Scanner scanner = new Scanner(System.in);
 
-    public void abrirMenu() {
-        int opcao;
-
-        do {
-            System.out.println("\n--- MENU DE USUÁRIOS ---");
-            System.out.println("1. Cadastrar usuário");
-            System.out.println("2. Listar usuários");
-            System.out.println("3. Buscar usuário por ID");
-            System.out.println("4. Atualizar usuário");
-            System.out.println("5. Remover usuário");
-            System.out.println("0. Voltar");
-            System.out.print("Escolha uma opção: ");
-            opcao = scanner.nextInt();
-            scanner.nextLine(); // limpar buffer
-
-            switch (opcao) {
-                case 1 -> cadastrar();
-                case 2 -> listar();
-                case 3 -> buscar();
-                case 4 -> atualizar();
-                case 5 -> remover();
-                case 0 -> System.out.println("Voltando ao menu principal...");
-                default -> System.out.println("Opção inválida!");
-            }
-
-        } while (opcao != 0);
-    }
-
-    private void cadastrar() {
+    public void cadastrar(Scanner scanner) {
         System.out.print("Nome do usuário: ");
         String nome = scanner.nextLine();
 
@@ -55,7 +26,7 @@ public class UserService {
         System.out.println("✅ Usuário cadastrado com sucesso: " + user);
     }
 
-    private void listar() {
+    public void listar() {
         if (usuarios.isEmpty()) {
             System.out.println("Nenhum usuário cadastrado.");
         } else {
@@ -66,7 +37,7 @@ public class UserService {
         }
     }
 
-    private void buscar() {
+    public void buscar(Scanner scanner) {
         System.out.print("ID do usuário a buscar: ");
         int id = scanner.nextInt();
         scanner.nextLine();
@@ -81,7 +52,7 @@ public class UserService {
         System.out.println("Usuário não encontrado.");
     }
 
-    private void atualizar() {
+    public void atualizar(Scanner scanner) {
         System.out.print("ID do usuário a atualizar: ");
         int id = scanner.nextInt();
         scanner.nextLine();
@@ -113,7 +84,7 @@ public class UserService {
         System.out.println("Usuário não encontrado.");
     }
 
-    private void remover() {
+    public void excluir(Scanner scanner) {
         System.out.print("ID do usuário a remover: ");
         int id = scanner.nextInt();
         scanner.nextLine();

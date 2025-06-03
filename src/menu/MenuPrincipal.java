@@ -27,7 +27,7 @@ public class MenuPrincipal {
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine(); // Consumir a quebra de linha
 
             switch (opcao) {
                 case 1 -> menuUsuarios();
@@ -44,11 +44,22 @@ public class MenuPrincipal {
     private void iniciarSimulacao() {
         System.out.println("\n>>> Iniciando simulação de risco...");
 
-        riskAnalysisService.analisarSensores();
-        alertService.verificarENotificar();
-        evacuationService.evacuacaoEmergencial();
+        int ciclos = 5; // Número de ciclos simulados
+        for (int i = 1; i <= ciclos; i++) {
+            System.out.println("\n--- CICLO " + i + " ---");
 
-        System.out.println(">>> Simulação concluída.\n");
+            riskAnalysisService.analisarSensores();
+            alertService.verificarENotificar();
+            evacuationService.evacuacaoEmergencial();
+
+            try {
+                Thread.sleep(2000); // Pausa de 2 segundos
+            } catch (InterruptedException e) {
+                System.out.println("Simulação interrompida.");
+            }
+        }
+
+        System.out.println("\n>>> Simulação finalizada.\n");
     }
 
     private void menuUsuarios() {

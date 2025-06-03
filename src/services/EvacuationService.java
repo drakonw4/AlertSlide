@@ -15,4 +15,10 @@ public class EvacuationService {
         acionarAbrigoMaisProximo(area);
         acionarEquipesEmergencia(area);
     }
+
+    public void evacuacaoEmergencial() {
+        String areaSimulada = "Morro Azul";
+        System.out.println("\n⚠️ Evacuação emergencial iniciada na área de risco: " + areaSimulada);
+        iniciarEvacuacao(areaSimulada);
+    }
 }
