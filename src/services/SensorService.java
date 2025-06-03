@@ -14,10 +14,19 @@ public class SensorService {
     }
 
     public double gerarInclinacao() {
-        return 0 + (random.nextDouble() * 90); // 0º a 90º
+        return 0 + (random.nextDouble() * 90); // 0° a 90°
     }
 
-    public String gerarRelatorioSensores() {
-        return "Umidade: " + gerarUmidade() + "% | Pressão: " + gerarPressao() + " hPa | Inclinação: " + gerarInclinacao() + "°";
+    public double[] simularLeituraSensores() {
+        double umidade = gerarUmidade();
+        double pressao = gerarPressao();
+        double inclinacao = gerarInclinacao();
+
+        System.out.println("\n📡 Leituras simuladas dos sensores:");
+        System.out.printf("- Umidade: %.2f %%\n", umidade);
+        System.out.printf("- Pressão: %.2f hPa\n", pressao);
+        System.out.printf("- Inclinação: %.2f °\n", inclinacao);
+
+        return new double[] { umidade, pressao, inclinacao };
     }
 }
