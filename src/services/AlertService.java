@@ -1,24 +1,60 @@
 package services;
 
-public class AlertService {
+import common.AbstractCrudService;
+import entities.Alert;
 
-    private final SensorService sensorService = new SensorService();
-    private final RiskAnalysisService riskAnalysisService = new RiskAnalysisService();
+import java.util.List;
+import java.util.stream.Collectors;
 
-    public void emitirAlerta(String nivelRisco) {
-        switch (nivelRisco) {
-            case "ALTO" -> System.out.println("🚨 ALERTA VERMELHO: Risco alto de deslizamento!");
-            case "MODERADO" -> System.out.println("⚠️ ALERTA LARANJA: Monitoramento contínuo necessário.");
-            case "BAIXO" -> System.out.println("✅ Alerta verde: Condições estáveis.");
-            default -> System.out.println("Nível de risco desconhecido.");
-        }
+/**
+ * Serviço genérico de CRUD para Alert.
+ * - Gerencia lista de Alert e controle de IDs via AbstractCrudService.
+ * - Inclui método extra para buscar alertas por área de risco.
+ */
+public class AlertService extends AbstractCrudService<Alert> {
+
+    @Override
+    protected int getId(Alert a) {
+        return a.getId();
     }
 
-    public void verificarENotificar() {
-        System.out.println("\n🔔 Verificando condições de alerta...");
+    @Override
+    protected void setId(Alert a, int id) {
+        a.setId(id);
+    }
 
-        double[] leitura = sensorService.simularLeituraSensores();
-        String nivel = riskAnalysisService.calcularNivelRisco(leitura[0], leitura[1], leitura[2]);
-        emitirAlerta(nivel);
+    /**
+     * Atualiza um alerta existente:
+     * - Permite alterar apenas a área ou o nível de risco. Não altera mensagem nem timestamp.
+     *
+     * @param a Objeto Alert contendo id e novos valores para area e/ou riskLevel.
+     * @return o objeto existente atualizado, ou null se não encontrado.
+     */
+    @Override
+    public Alert atualizar(Alert a) {
+        Alert existente = buscarPorId(a.getId());
+        if (existente == null) {
+            return null;
+        }
+
+        // Atualiza área de risco
+        existente.setArea(a.getArea());
+
+        // Atualiza nível de risco
+        existente.setRiskLevel(a.getRiskLevel());
+
+        return existente;
+    }
+
+    /**
+     * Retorna todos os alertas gerados para uma área específica.
+     *
+     * @param areaId ID da área de risco.
+     * @return lista de Alert cujo campo `area.id == areaId`.
+     */
+    public List<Alert> buscarPorArea(int areaId) {
+        return itens.stream()
+                .filter(alert -> alert.getArea().getId() == areaId)
+                .collect(Collectors.toList());
     }
 }

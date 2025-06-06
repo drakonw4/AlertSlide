@@ -5,8 +5,8 @@ public abstract class Entity {
     protected String nome;
 
     public Entity(int id, String nome) {
-        this.id = id;
-        this.nome = nome;
+        setId(id);
+        setNome(nome);
     }
 
     public int getId() {
@@ -14,6 +14,9 @@ public abstract class Entity {
     }
 
     public void setId(int id) {
+        if (id < 0) {
+            throw new IllegalArgumentException("ID deve ser maior que zero.");
+        }
         this.id = id;
     }
 
@@ -22,6 +25,9 @@ public abstract class Entity {
     }
 
     public void setNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nome não pode ser nulo ou vazio.");
+        }
         this.nome = nome;
     }
 

@@ -5,11 +5,11 @@ public class User extends Entity {
     private String phone;
     private String address;
 
-    public User(int id, String name, String cpf, String phone, String address) {
-        super(id, name);
-        this.cpf = cpf;
-        this.phone = phone;
-        this.address = address;
+    public User(int id, String nome, String cpf, String phone, String address) {
+        super(id, nome);
+        setCpf(cpf);
+        setPhone(phone);
+        setAddress(address);
     }
 
     public String getCpf() {
@@ -17,6 +17,9 @@ public class User extends Entity {
     }
 
     public void setCpf(String cpf) {
+        if (cpf == null || cpf.trim().isEmpty()) {
+            throw new IllegalArgumentException("CPF não pode ser vazio.");
+        }
         this.cpf = cpf;
     }
 
@@ -25,6 +28,9 @@ public class User extends Entity {
     }
 
     public void setPhone(String phone) {
+        if (phone == null || phone.trim().isEmpty()) {
+            throw new IllegalArgumentException("Telefone não pode ser vazio.");
+        }
         this.phone = phone;
     }
 
@@ -33,14 +39,20 @@ public class User extends Entity {
     }
 
     public void setAddress(String address) {
+        if (address == null || address.trim().isEmpty()) {
+            throw new IllegalArgumentException("Endereço não pode ser nulo ou vazio.");
+        }
         this.address = address;
     }
 
     @Override
     public String toString() {
-        return super.toString() +
-                ", CPF: " + cpf +
-                ", Phone: " + phone +
-                ", Address: " + address;
+        return "User[" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ']';
     }
 }
